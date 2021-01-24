@@ -57,7 +57,7 @@ def test_wrong_pin_input():
 
 
 def test_no_user():
-    with pytest.raises(UnidentifiedUser):
+    with pytest.raises(AttributeError):
         atm.check_balance()
 
 

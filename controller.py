@@ -3,6 +3,7 @@ from typing import Mapping, Union, Tuple
 
 
 class UnidentifiedUser(ValueError):
+
     pass
 
 
@@ -137,16 +138,10 @@ class Controller:
                 self.prev_credentials = card_num
             raise IncorrectPIN()
 
-    def check_user_status(self) -> None:
-        if not self.current_user:
-            raise UnidentifiedUser()
-
     def check_balance(self) -> int:
-        self.check_user_status()
         return self.current_user.balance
 
     def deposit(self, amt: int) -> None:
-        self.check_user_status()
         if amt > Controller.DEPOSIT_LIMIT:
             raise ValueError(
                 f"Deposit Limit: \
@@ -156,21 +151,17 @@ class Controller:
         self.cash_bin += amt
 
     def withdraw(self, amt: int) -> None:
-        self.check_user_status()
         if self.cash_bin < amt:
             raise ValueError("Cash bin is deplete.")
         self.current_user.withdraw(amt)
         self.cash_bin -= amt
 
     def get_transactions(self) -> any:
-        self.check_user_status()
         return self.current_user.transactions
 
     def transaction(self, recepient_num: str, amt: int) -> None:
-        self.check_user_status()
         self.bank.transaction(self.current_user, recepient_num, amt)
 
     def end(self) -> None:
-        self.check_user_status()
         self.current_user = None
         self.wrong_count = 0
